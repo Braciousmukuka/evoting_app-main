@@ -3,7 +3,7 @@ from django.contrib.auth.models import User
 
 # Create your models here.
 
-class Category(models.Model):
+class Positions(models.Model):
     title = models.CharField(max_length=200)
     slug = models.SlugField(blank=True, null=True)
     description = models.TextField(blank=True, null=True)
@@ -14,10 +14,10 @@ class Category(models.Model):
         return self.title
     
 
-class CategoryItem(models.Model):
+class Candidates(models.Model):
     title = models.CharField(max_length=200)
     total_vote = models.IntegerField(default=0)
-    category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name="items")
+    category = models.ForeignKey(Positions, on_delete=models.CASCADE, related_name="items")
     voters = models.ManyToManyField(User, blank=True)
     
     @property

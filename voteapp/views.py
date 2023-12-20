@@ -2,18 +2,18 @@ from django.shortcuts import render, redirect
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Category, CategoryItem
+from .models import *
 # Create your views here.
 
 def index(request):
-    categories = Category.objects.all()
+    categories = Positions.objects.all()
     context = {"categories":categories}
     return render(request, "index.html", context)
 
 @login_required(login_url="signin")
 def detail(request, slug):
-    category = Category.objects.get(slug=slug)
-    categories = CategoryItem.objects.filter(category=category)
+    category = Positions.objects.get(slug=slug)
+    categories = Candidates.objects.filter(category=category)
     
     msg = None
     
@@ -25,7 +25,7 @@ def detail(request, slug):
     if request.method == 'POST':
         selected_id = request.POST.get("category_item")
         print(selected_id)
-        item = CategoryItem.objects.get(id=selected_id)
+        item = Candidates.objects.get(id=selected_id)
         item.total_vote += 1
         
         item_category = item.category 
@@ -38,14 +38,15 @@ def detail(request, slug):
         item_category.save()
         
         return redirect("result", slug=category.slug)
+    
         
     
     context = {"category": category, "categories": categories, "msg": msg}
     return render(request, "detail.html", context)
 
 def result(request, slug):
-    category = Category.objects.get(slug=slug)
-    items = CategoryItem.objects.filter(category=category)
+    category = Positions.objects.get(slug=slug)
+    items = Candidates.objects.filter(category=category)
     context = {"category": category, "items": items}
     return render(request, "result.html", context)
 
